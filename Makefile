@@ -58,7 +58,7 @@ GJF_JAR     = $(TOOLS_DIR)/gjf.jar
 GJF_URL     = https://maven.org/maven2/com/google/googlejavaformat/google-java-format/$(GJF_VERSION)/google-java-format-$(GJF_VERSION)-all-deps.jar
 GJF_SHA256  = 32342e7c1b4600f80df3471da46aee8012d3e1445d5ea1be1fb71289b07cc735
 
-DISTRO_JAR = org.x96.sys.foundation.cs.lexer.dsl.jar
+DISTRO_JAR = org.x96.sys.lexer.jar
 
 JAVA_SOURCES      := $(shell find $(SRC_MAIN) -name "*.java")
 JAVA_TEST_SOURCES := $(shell find $(SRC_TEST) -name "*.java")
