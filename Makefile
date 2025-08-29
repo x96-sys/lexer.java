@@ -33,11 +33,6 @@ TOKENIZER_JAR     = $(LIB_DIR)/org.x96.sys.lexer.tokenizer.jar
 TOKENIZER_URL     = https://github.com/x96-sys/lexer.tokenizer.java/releases/download/v$(TOKENIZER_VERSION)/org.x96.sys.lexer.tokenizer.jar
 TOKENIZER_SHA256  = 21a10167ffd798f1fa9cbbda1382650a411c826b957bf3cc607863696bf4e8f7
 
-ENTRY_VERSION = 1.0.0
-ENTRY_JAR     = $(LIB_DIR)/org.x96.sys.lexer.entry.jar
-ENTRY_URL     = https://github.com/x96-sys/lexer.visitor.entry.java/releases/download/v$(ENTRY_VERSION)/org.x96.sys.lexer.entry.jar
-ENTRY_SHA256  = e706396e6d3fdbd69d529a0d5cbd4597699bd7f7d85f563983ee87e4d4fa90b4
-
 VISITOR_VERSION = 1.0.0
 VISITOR_JAR     = $(LIB_DIR)/org.x96.sys.lexer.visitor.jar
 VISITOR_URL     = https://github.com/x96-sys/lexer.visitor.java/releases/download/v$(VISITOR_VERSION)/org.x96.sys.lexer.visitor.jar
@@ -68,7 +63,7 @@ DISTRO_JAR = org.x96.sys.foundation.cs.lexer.dsl.jar
 JAVA_SOURCES      := $(shell find $(SRC_MAIN) -name "*.java")
 JAVA_TEST_SOURCES := $(shell find $(SRC_TEST) -name "*.java")
 
-CP = $(TOKEN_JAR):$(TOKENIZER_JAR):$(ENTRY_JAR):$(VISITOR_JAR):$(KIND_JAR):$(CS_AST_JAR):$(ROUTER_JAR):$(IO_JAR):$(BUZZ_JAR)
+CP = $(TOKEN_JAR):$(TOKENIZER_JAR):$(VISITOR_JAR):$(KIND_JAR):$(CS_AST_JAR):$(IO_JAR):$(BUZZ_JAR):$(ROUTER_JAR)
 
 build: libs clean/build/main
 	@javac -d $(MAIN_BUILD) -cp $(CP) $(JAVA_SOURCES)
@@ -119,7 +114,6 @@ libs: \
 	$(LIB_DIR)/kind \
 	$(LIB_DIR)/token \
 	$(LIB_DIR)/tokenizer \
-	$(LIB_DIR)/lexer-entry \
 	$(LIB_DIR)/visitor \
 	$(LIB_DIR)/ast \
 	$(LIB_DIR)/router \
@@ -129,7 +123,6 @@ libs: \
 $(eval $(call deps,$(LIB_DIR),kind,KIND))
 $(eval $(call deps,$(LIB_DIR),token,TOKEN))
 $(eval $(call deps,$(LIB_DIR),tokenizer,TOKENIZER))
-$(eval $(call deps,$(LIB_DIR),lexer-entry,ENTRY))
 $(eval $(call deps,$(LIB_DIR),visitor,VISITOR))
 $(eval $(call deps,$(LIB_DIR),ast,CS_AST))
 $(eval $(call deps,$(LIB_DIR),router,ROUTER))
