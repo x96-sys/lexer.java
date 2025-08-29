@@ -15,7 +15,7 @@ public class TerminalFollowVisitor extends Visitor {
         return stream();
     }
 
-    private void terminalFollow(){
+    private void terminalFollow() {
         if (tokenizer.ready() && allowed()) {
             rec();
             terminalFollow();

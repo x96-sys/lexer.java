@@ -58,6 +58,19 @@ GJF_JAR     = $(TOOLS_DIR)/gjf.jar
 GJF_URL     = https://maven.org/maven2/com/google/googlejavaformat/google-java-format/$(GJF_VERSION)/google-java-format-$(GJF_VERSION)-all-deps.jar
 GJF_SHA256  = 32342e7c1b4600f80df3471da46aee8012d3e1445d5ea1be1fb71289b07cc735
 
+JACOCO_VERSION = 0.8.13
+JACOCO_BASE    = https://maven.org/maven2/org/jacoco
+
+JACOCO_CLI_VERSION = $(JACOCO_VERSION)
+JACOCO_CLI_JAR     = $(TOOLS_DIR)/jacococli.jar
+JACOCO_CLI_URL     = $(JACOCO_BASE)/org.jacoco.cli/$(JACOCO_CLI_VERSION)/org.jacoco.cli-$(JACOCO_CLI_VERSION)-nodeps.jar
+JACOCO_CLI_SHA256  = 8f748683833d4dc4d72cea5d6b43f49344687b831e0582c97bcb9b984e3de0a3
+
+JACOCO_AGENT_VERSION = $(JACOCO_VERSION)
+JACOCO_AGENT_JAR     = $(TOOLS_DIR)/jacocoagent-runtime.jar
+JACOCO_AGENT_URL     = $(JACOCO_BASE)/org.jacoco.agent/$(JACOCO_AGENT_VERSION)/org.jacoco.agent-$(JACOCO_AGENT_VERSION)-runtime.jar
+JACOCO_AGENT_SHA256  = 47e700ccb0fdb9e27c5241353f8161938f4e53c3561dd35e063c5fe88dc3349b
+
 DISTRO_JAR = org.x96.sys.lexer.jar
 
 JAVA_SOURCES      := $(shell find $(SRC_MAIN) -name "*.java")
@@ -78,6 +91,25 @@ test: build/test
      execute \
      --class-path $(TEST_BUILD):$(MAIN_BUILD):$(CP) \
      --scan-class-path
+
+coverage-run: build/test
+	java -javaagent:$(JACOCO_AGENT_JAR)=destfile=$(BUILD_DIR)/jacoco.exec \
+       -jar $(JUNIT_JAR) \
+       execute \
+       --class-path $(TEST_BUILD):$(MAIN_BUILD):$(CP) \
+       --scan-class-path
+
+coverage-report:
+	java -jar $(JACOCO_CLI_JAR) report \
+     $(BUILD_DIR)/jacoco.exec \
+     --classfiles $(MAIN_BUILD) \
+     --sourcefiles $(SRC_MAIN) \
+     --html $(BUILD_DIR)/coverage \
+     --name "Coverage Report"
+
+coverage: coverage-run coverage-report
+	@echo "[📊] [relatório] de cobertura disponível em: build/coverage/index.html"
+	@echo "[🌐] [abrir] com: open out/coverage/index.html"
 
 define deps
 $1/$2: $1
@@ -131,10 +163,15 @@ $(eval $(call deps,$(LIB_DIR),buzz,BUZZ))
 
 kit: \
 	$(TOOLS_DIR)/junit \
-	$(TOOLS_DIR)/gjf
+	$(TOOLS_DIR)/gjf \
+	$(TOOLS_DIR)/jacoco_cli \
+	$(TOOLS_DIR)/jacoco_agent
 
 $(eval $(call deps,$(TOOLS_DIR),junit,JUNIT))
 $(eval $(call deps,$(TOOLS_DIR),gjf,GJF))
+$(eval $(call deps,$(TOOLS_DIR),jacoco_cli,JACOCO_CLI))
+$(eval $(call deps,$(TOOLS_DIR),jacoco_agent,JACOCO_AGENT))
+
 
 format:
 	@find src -name "*.java" -print0 | xargs -0 java -jar $(GJF_JAR) --aosp --replace
